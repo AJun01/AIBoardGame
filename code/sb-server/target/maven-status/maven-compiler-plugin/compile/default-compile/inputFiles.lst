@@ -1,4 +1,7 @@
 /Users/aj/projects/AIBoardGame/code/sb-server/src/main/java/com/example/spring_boot/Application.java
+/Users/aj/projects/AIBoardGame/code/sb-server/src/main/java/com/example/spring_boot/chat/ChatController.java
 /Users/aj/projects/AIBoardGame/code/sb-server/src/main/java/com/example/spring_boot/user/User.java
+/Users/aj/projects/AIBoardGame/code/sb-server/src/main/java/com/example/spring_boot/user/UserConfig.java
 /Users/aj/projects/AIBoardGame/code/sb-server/src/main/java/com/example/spring_boot/user/UserController.java
+/Users/aj/projects/AIBoardGame/code/sb-server/src/main/java/com/example/spring_boot/user/UserRepository.java
 /Users/aj/projects/AIBoardGame/code/sb-server/src/main/java/com/example/spring_boot/user/UserService.java
