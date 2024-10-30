@@ -28,7 +28,7 @@ services:
   #   command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9080"]
 
   # Backend (Spring Boot)
-  course-builder-chatbot-ms:
+  sb-service:
     build:
       context: ./code/sb-server
       dockerfile: Dockerfile
@@ -38,7 +38,7 @@ services:
      # - ai-service
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/aibg_user
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/aibg_user
       SPRING_DATASOURCE_USERNAME: aibg
       SPRING_DATASOURCE_PASSWORD: aibgnewbee
       #AI_SERVICE_URL: http://ai-service:9080
@@ -58,4 +58,4 @@ volumes:
 
 networks:
      default:
-       name: seprojects-cs673olf24team1_default
+       name: AIBoardGame
