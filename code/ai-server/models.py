@@ -5,12 +5,12 @@ from enum import Enum
 from openai import OpenAI
 
 
-# class GameType(BaseModel):
-#     game_type: str
+class GameType(BaseModel):
+    game_type: str
 
-# class PlayerChoice(BaseModel):
-#     user_id: int 
-#     choice: str
+class PlayerChoice(BaseModel):
+    # user_id: int 
+    choice: str
 
 def openai_call(prompt):
     client = OpenAI()
