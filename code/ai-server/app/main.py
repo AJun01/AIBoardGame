@@ -1,65 +1,32 @@
 from uuid import uuid4, UUID
 from fastapi import FastAPI, HTTPException
 from typing import List
-from models import User, Gender, Role, UpdateUser
+# from models import GameType, PlayerChoice, openai_call
+from models import openai_call
 
 app = FastAPI()
 
-db: List[User] = [
-    User(
-        id = uuid4(),
-        first_name = "Jamila",
-        last_name = "Ahmed",
-        gender = Gender.female,
-        roles = [Role.student]
-    ),
-    User(
-        id = uuid4(),
-        first_name = "Alex",
-        last_name = "Jones",
-        gender = Gender.male,
-        roles = [Role.admin, Role.user]
-    )
-]
+history = []
 
-@app.get("/")
-async def root():
-    return {"Hello": "Mundo"}
+@app.post("/game/init")
+# async def create_game_background(game_type: GameType):
+async def create_game_background(game_type: str):
+    # Use OpenAI API to generate the game background based on the game type
+    # prompt = {"role": "system", "content": f"Create an {game_type.game_type} game story backgrounds for player. I'll tell you later what choices the four players make, stopping the story at the first choice to be made. Within 150 words per reply."}
+    prompt = {"role": "system", "content": f"Create an {game_type} game story backgrounds for player. I'll tell you later what choices the four players make, stopping the story at the first choice to be made. Within 150 words per reply."}
+    history.append(prompt)
+    response = openai_call(history)
+    history.append({"role": "assistant", "content": response})
+    return response
 
-@app.get("/api/v1/users")
-async def fetch_users():
-    return db
-
-@app.post("/api/v1/users")
-async def register_user(user: User):
-    db.append(user)
-    return {"id": user.id}
-
-@app.delete("/api/v1/users/{user_id}")
-async def delete_user(user_id: UUID):
-    for user in db:
-        if user.id == user_id:
-            db.remove(user)
-            return 
-    raise HTTPException(
-        status_code = 404,
-        detail = f"User with id: {user_id} dose not exists"
-    )
-
-@app.put("/api/v1/users/{user_id}")
-async def update_user(user_update: UpdateUser, user_id: UUID):
-    for user in db:
-        if user.id == user_id:
-            if user_update.first_name is not None:
-                user.first_name = user_update.first_name
-            if user_update.last_name is not None:
-                user.last_name = user_update.last_name
-            if user_update.middle_name is not None:
-                user.middle_name = user_update.middle_name
-            if user_update.roles is not None:
-                user.roles = user_update.roles
-            return
-    raise HTTPException(
-        status_code = 404,
-        detail = f"User with id: {user_id} does not exists"
-    )
+@app.post("/game/choices")
+# async def handle_player_choices(playerChoice: PlayerChoice):
+async def handle_player_choices(playerChoice: str):
+    # Process player choices
+    # prompt = f"Player {choice.user_id} chose: {choice.question}"
+    # prompt = {"role": "user", "content": {playerChoice.choice}}
+    prompt = {"role": "user", "content": playerChoice}
+    history.append(prompt)
+    response = openai_call(history)
+    history.append({"role": "assistant", "content": response})
+    return response

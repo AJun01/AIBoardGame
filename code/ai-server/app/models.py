@@ -2,26 +2,21 @@ from typing import Optional, List
 from uuid import UUID, uuid4
 from pydantic import BaseModel
 from enum import Enum
+from openai import OpenAI
 
-class Gender(str, Enum):
-    male = "male"
-    female = "female"
 
-class Role(str, Enum):
-    admin = "admin"
-    user = "user"
-    student = "student"
+# class GameType(BaseModel):
+#     game_type: str
 
-class User(BaseModel):
-    id: Optional[UUID] = uuid4()
-    first_name: str
-    last_name: str
-    middle_name: Optional[str] = None
-    gender: Gender
-    roles: List[Role]
+# class PlayerChoice(BaseModel):
+#     user_id: int 
+#     choice: str
 
-class UpdateUser(BaseModel):
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    middle_name: Optional[str] = None
-    roles: Optional[List[Role]] = None
+def openai_call(prompt):
+    client = OpenAI()
+    response = client.chat.completions.create(
+        model = "gpt-4o-mini-2024-07-18",
+        messages = prompt
+    )
+
+    return response.choices[0].message.content
