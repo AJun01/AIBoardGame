@@ -15,17 +15,19 @@ services:
       POSTGRES_PASSWORD: aibgnewbee
 
   # AI Service (FastAPI)
-  # ai-service:
-  #   build: 
-  #     context: ./code/ai-service/fast-api
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "9080:9080"
-  #   volumes:
-  #     - ./code/ai-service/fast-api:/app
-  #   env_file:
-  #     - .env
-  #   command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9080"]
+  ai-service:
+    build: 
+      context: ./code/ai-server
+      dockerfile: Dockerfile
+    ports:
+      - "9001:9001"
+    # volumes:
+    #   - ./code/ai-server:/app
+    env_file:
+      - .env
+    # command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9080"]
+    command: ["fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "9001"]
+  # CMD ["fastapi", "run", "main.py", "--port", "9001"]
 
   # Backend (Spring Boot)
   sb-service:
