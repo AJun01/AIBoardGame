@@ -3,8 +3,23 @@ from fastapi import FastAPI
 from typing import List
 # from models import GameType, PlayerChoice, openai_call
 from models import openai_call, GameType, PlayerChoice
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# whitelist for specific origins
+origins = [ # example server
+    "http://localhost:8080",  # replace with actual domain/IP of other server
+    # add other domains or IPs as needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # only allow requests from these origins
+    allow_credentials=True,
+    allow_methods=["*"],  # allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # allow all headers
+)
 
 history = []
 
@@ -38,7 +53,7 @@ async def handle_player_choices(playerChoice: PlayerChoice):
     # Process player choices
     # prompt = f"Player {choice.user_id} chose: {choice.question}"
     # prompt = {"role": "user", "content": {playerChoice.choice}}
-    prompt = {"role": "user", "content": playerChoice}
+    prompt = {"role": "user", "content": playerChoice.choice}
     history.append(prompt)
     response = openai_call(history)
     history.append({"role": "assistant", "content": response})

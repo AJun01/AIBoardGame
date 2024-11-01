@@ -1,5 +1,6 @@
 version: '3.8'
 
+
 services:
   # PostgreSQL Database Service
   db:
@@ -13,21 +14,21 @@ services:
       POSTGRES_DB: aibg_user
       POSTGRES_USER: aibg
       POSTGRES_PASSWORD: aibgnewbee
+    networks:
+      - AIBoardGame
 
   # AI Service (FastAPI)
   ai-service:
-    build: 
+    build:
       context: ./code/ai-server
       dockerfile: Dockerfile
     ports:
       - "9001:9001"
-    # volumes:
-    #   - ./code/ai-server:/app
     env_file:
       - .env
-    # command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9080"]
-    command: ["fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "9001"]
-  # CMD ["fastapi", "run", "main.py", "--port", "9001"]
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9001"]
+    networks:
+      - AIBoardGame
 
   # Backend (Spring Boot)
   sb-service:
@@ -37,13 +38,15 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-     # - ai-service
+      - ai-service
       - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/aibg_user
       SPRING_DATASOURCE_USERNAME: aibg
       SPRING_DATASOURCE_PASSWORD: aibgnewbee
-      #AI_SERVICE_URL: http://ai-service:9080
+      AI_SERVICE_URL: http://ai-service:9001
+    networks:
+      - AIBoardGame
 
   # Frontend (React + Vite)
   # frontend:
@@ -53,11 +56,11 @@ services:
   #   ports:
   #     - "3000:80"
   #   depends_on:
-  #     - course-builder-chatbot-ms
+  #     - sb-service
 
 volumes:
   postgres_data:
 
 networks:
-     default:
-       name: AIBoardGame
+  AIBoardGame:
+    name: AIBoardGame
