@@ -1,6 +1,5 @@
 version: '3.8'
 
-
 services:
   # PostgreSQL Database Service
   db:
@@ -48,15 +47,17 @@ services:
     networks:
       - AIBoardGame
 
-  # Frontend (React + Vite)
-  # frontend:
-  #   build:
-  #     context: ./code/frontend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:80"
-  #   depends_on:
-  #     - sb-service
+  # Frontend (React)
+  client:
+    build:
+      context: ./code/client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - sb-service
+    networks:
+      - AIBoardGame
 
 volumes:
   postgres_data:
