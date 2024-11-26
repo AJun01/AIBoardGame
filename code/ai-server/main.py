@@ -41,6 +41,7 @@ def read_root():
 @app.post("/game/init")
 async def create_game_background(game_type: GameType):
     # Use OpenAI API to generate the game background based on the game type
+    history=[]
     prompt = {"role": "system", "content": f"Create an {game_type.game_type} game story backgrounds for player. I'll tell you later what choices the four players make, stopping the story at the first choice to be made. Within 150 words per reply."}
     history.append(prompt)
     response = openai_call(history)
