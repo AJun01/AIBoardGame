@@ -30,6 +30,8 @@ public class ChatController {
                 .bodyToMono(String.class)
                 .block();
 
+        System.out.println("received!");
+
         // return the response from the AI service
         return ResponseEntity.ok(response);
     }

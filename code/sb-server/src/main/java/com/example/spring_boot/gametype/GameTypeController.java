@@ -30,6 +30,7 @@ public class GameTypeController {
                 .block();
 
         // return OK status
+        System.out.println("received!");
         return ResponseEntity.ok().build();
     }
 }
