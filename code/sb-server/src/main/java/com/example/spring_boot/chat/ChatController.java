@@ -1,9 +1,11 @@
 package com.example.spring_boot.chat;
 
+import com.example.spring_boot.chat.ConvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.apache.commons.text.StringEscapeUtils;
 
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
@@ -11,10 +13,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ChatController {
 
     private final WebClient webClient;
+    private final ConvertService convertService; // inject the MarkdownService
 
     @Autowired
-    public ChatController(WebClient.Builder webClientBuilder) {
+    public ChatController(WebClient.Builder webClientBuilder,ConvertService markdownService) {
         this.webClient = webClientBuilder.baseUrl("http://ai-service:9001").build();
+        this.convertService = markdownService; // initialize the service
     }
 
     @PostMapping
@@ -30,9 +34,10 @@ public class ChatController {
                 .bodyToMono(String.class)
                 .block();
 
-        System.out.println("received!");
-
-        // return the response from the AI service
-        return ResponseEntity.ok(response);
+        System.out.println("Received AI response!");
+        // convert the AI response from markdown to plain text
+        String cleanedText = convertService.cleanAndFormat(response);
+        // return the plain text response
+        return ResponseEntity.ok(cleanedText);
     }
 }
