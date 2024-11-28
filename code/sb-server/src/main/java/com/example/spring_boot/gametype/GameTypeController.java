@@ -16,21 +16,24 @@ public class GameTypeController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> receiveGameType(@RequestBody GameTypeRequest gameTypeRequest) {
+    public ResponseEntity<String> receiveGameType(@RequestBody GameTypeRequest gameTypeRequest) {
         // extract game type from request body
         String gameServiceUrl = "/game/init";
-        String gameType = gameTypeRequest.getGame_type();
 
-        // send request with JSON payload
-        webClient.post()
-                .uri(gameServiceUrl)
-                .bodyValue(gameTypeRequest)
-                .retrieve()
-                .bodyToMono(Void.class)
-                .block();
+        try {
+            // send request with JSON payload and retrieve response as a string
+            String response = webClient.post()
+                    .uri(gameServiceUrl)
+                    .bodyValue(gameTypeRequest)
+                    .retrieve()
+                    .bodyToMono(String.class) // receive response as a string
+                    .block();
 
-        // return OK status
-        System.out.println("received!");
-        return ResponseEntity.ok().build();
+            // return the response received from the AI service
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // handle errors and return appropriate response
+            return ResponseEntity.status(500).body("Error communicating with AI service: " + e.getMessage());
+        }
     }
 }
