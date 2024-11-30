@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="2efee6a1-2148-4c75-83e7-c274b7e978d8" name="aibg_user@localhost Mapping">
+      <data-sources db="58293b04-81dc-4c40-b022-57cb5f41ae4d" />
+      <scope>
+        <node kind="database" qname="aibg_user" />
+      </scope>
+    </mapping>
+  </component>
+</project>
