@@ -1,3 +1,4 @@
+//Chat.js
 import React, { useState, useRef, useEffect } from "react";
 
 function Chat() {
@@ -8,32 +9,92 @@ function Chat() {
   const handleGenreSelect = (event) => {
     setSelectedGenre(event.target.value);
   };
-  const handleOKclick = () => {
-    if (selectedGenre) {
-      console.log(`Selected Genre: ${selectedGenre}`);
+  const handleOKclick = async () => {
+    if (!selectedGenre) {
+      alert("Plz select a genre before proceeding!");
+      return;
+    }
+    console.log(`Selected Genre: ${selectedGenre}`);
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/gametype", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ game_type: selectedGenre }),
+      });
+      if (!response.ok) {
+        console.error("Response error:", response.status, response.statusText);
+        alert("Error communicating with server.");
+        return;
+      }
+      const genreMessage = await response.text();
+      console.log("Genre response received: ", genreMessage);
+
+      setMessage((prevMessage) => [
+        ...prevMessage,
+        { text: genreMessage, sender: "System" },
+      ]);
       setIsChatOpen(false);
-    } else {
-      alert("Please select a genre before proceeding!!");
+    } catch (error) {
+      console.error("Fetch failed", error.message);
+      alert("Failed to connect to the server");
     }
   };
 
   const [message, setMessage] = useState([]);
   const [input, setInput] = useState("");
-  const handleSendMessage = () => {
+  const [cumulativeChoice, setCumulativeChioce] = useState("");
+
+  const handleSendMessage = async () => {
     if (input.trim() === "") return;
-    setMessage([...message, { text: input, sender: "You" }]);
-    console.log(message);
+
+    const newMessage = { text: input, sender: "You" };
+    setMessage((prevMessages) => [...prevMessages, newMessage]);
+
+    const updatedChoice = cumulativeChoice
+      ? `${cumulativeChoice};${input.trim()}`
+      : input.trim();
+    setCumulativeChioce(updatedChoice);
+
     setInput("");
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ choice: updatedChoice }),
+      });
+
+      if (!response.ok) {
+        console.error(
+          "Failed to send message:",
+          response.status,
+          response.statusText
+        );
+        alert("Error communicating with server!");
+        return;
+      }
+
+      const serverMessage = await response.text();
+      console.log("Server response:", serverMessage);
+
+      // 显示服务器返回的消息
+      setMessage((prevMessages) => [
+        ...prevMessages,
+        { text: serverMessage, sender: "System" },
+      ]);
+    } catch (error) {
+      console.error("Fetch failed:", error.message);
+      alert("Failed to connect to the server.");
+    }
   };
 
   return (
     <div className="bg-mainBackground flex flex-col items-center justfy-center min-h-screen">
-      <div className="absolute top-10 left-10 text-mainFont font-primary">
+      <div className="fixed top-10 left-10 text-mainFont font-primary">
         <div className="text-5xl font-bold">Game Room</div>
         <div className="ml-3 mt-3">{today}</div>
       </div>
       {/* Messages List */}
-      <div className="flex-1 flex flex-col overflow-y-auto p-4 space-y-3 mb-16 justify-end w-3/4 font-secondary">
+      <div className="flex-1 flex flex-col overflow-y-auto p-4 space-y-3 mt-24 mb-16 justify-end w-3/4 font-secondary ">
         {message.map((message, index) => (
           <div
             key={index}
