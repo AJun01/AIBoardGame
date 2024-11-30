@@ -43,4 +43,12 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
+    public boolean loginUser(String email, String password) {
+        Optional<User> userOptional = userRepository.findUserByEmail(email);
+        if (userOptional.isPresent()) {
+            return userOptional.get().getPassword().equals(password);
+        }
+        return false;
+    }
+
 }

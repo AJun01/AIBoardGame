@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
 @RequestMapping(path = "api/v1/user")
 public class UserController {
@@ -30,5 +31,14 @@ public class UserController {
     @DeleteMapping(path = "{userId}")
     public void deleteUser(@PathVariable("userId") Long userId){
         userService.deleteUser(userId);
+    }
+    @PostMapping("/login")
+    public String loginUser(@RequestParam String email, @RequestParam String password) {
+        boolean isAuthenticated = userService.loginUser(email, password);
+        if (isAuthenticated) {
+            return "Login successful!";
+        } else {
+            return "Invalid email or password.";
+        }
     }
 }
