@@ -47,6 +47,22 @@ public class UserConfig {
                     LocalDate.of(1990, Month.APRIL, 15)
             );
 
+            User user5 = new User(
+                    5L,
+                    "Abbie",
+                    "1234",
+                    "YL@email.com",
+                    LocalDate.of(2000, Month.AUGUST, 16)
+            );
+
+            User user6 = new User(
+                    6L,
+                    "test",
+                    "123",
+                    "test@email.com",
+                    LocalDate.of(2000, Month.AUGUST, 16)
+            );
+
             // Save all users to the repository
             repository.saveAll(List.of(user1, user2, user3, user4));
         };
