@@ -30,26 +30,26 @@ function Room() {
           <div className="relative flex flex-col items-center">
             {/* Top Row */}
             <div className="flex items-center">
-              <img
+              {/* <img
                 src={seat}
                 alt="Player"
-                className="w-20 h-30 hover:opacity-75"
+                className="w-90 h-90 mx-4 "
                 onClick={() => handlePlayerClick("seat1")}
-              />
-              <img src={table} alt="Table" className="w-90 h-90 mx-4" />
-              <img
+              /> */}
+              <img src={table} alt="Table" className="w-80 h-90 mx-4" />
+              {/* <img
                 src={seat}
                 alt="Player"
-                className="w-20 h-30 hover:opacity-75"
+                className="w-90 h-90 mx-4"
                 onClick={() => handlePlayerClick("seat2")}
-              />
+              /> */}
             </div>
             {/* Bottom Player */}
-            <div className="mt-4">
+            <div className="flex items-center mt-4">
               <img
                 src={seat}
                 alt="Player"
-                className="w-20 h-30 hover:opacity-75"
+                className="w-15 h-24 mx-4 hover:opacity-75"
                 onClick={() => handlePlayerClick("seat3")}
               />
             </div>
