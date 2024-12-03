@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database Service
+  db:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./code/db/db_init.sql:/docker-entrypoint-initdb.d/db_init.sql
+    environment:
+      POSTGRES_DB: aibg_user
+      POSTGRES_USER: aibg
+      POSTGRES_PASSWORD: aibgnewbee
+    networks:
+      - AIBoardGame
+
+  # AI Service (FastAPI)
+  ai-service:
+    build:
+      context: ./code/ai-server
+      dockerfile: Dockerfile
+    ports:
+      - "9001:9001"
+    env_file:
+      - .env
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9001"]
+    networks:
+      - AIBoardGame
+
+  # Backend (Spring Boot)
+  sb-service:
+    build:
+      context: ./code/sb-server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ai-service
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/aibg_user
+      SPRING_DATASOURCE_USERNAME: aibg
+      SPRING_DATASOURCE_PASSWORD: aibgnewbee
+      AI_SERVICE_URL: http://ai-service:9001
+    networks:
+      - AIBoardGame
+
+  # Frontend (React)
+  client:
+    build:
+      context: ./code/client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - sb-service
+    networks:
+      - AIBoardGame
+
+volumes:
+  postgres_data:
+
+networks:
+  AIBoardGame:
+    name: AIBoardGame
