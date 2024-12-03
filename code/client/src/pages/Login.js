@@ -14,7 +14,7 @@ function Login() {
       alert("Please fill out all fields!");
       return;
     }
-  
+
     try {
       const response = await fetch(
         `http://localhost:8080/api/v1/user/login?email=${encodeURIComponent(
@@ -24,7 +24,7 @@ function Login() {
           method: "POST",
         }
       );
-  
+
       if (response.ok) {
         const message = await response.text();
         if (message === "Login successful!") {
@@ -43,13 +43,9 @@ function Login() {
     }
   };
 
-
   const handleSignUp = async () => {
-
     navigate("/SignUp");
-
-  }
-
+  };
 
   return (
     <div className="bg-mainBackground flex items-center justify-center min-h-screen">
@@ -77,7 +73,7 @@ function Login() {
             <input
               type="email"
               id="email"
-              className="relative w-3/4 h-10 mx-auto mt-1 px-3 py-2 border border-gray-300 rounded-md bg-transparent text-mainBackground placeholder-opacity-75 font-primary placeholder-mainBackground"
+              className="relative w-3/4 h-10 mx-auto mt-1 px-3 py-2 border border-gray-300 rounded-md bg-transparent text-mainBackground placeholder-opacity-75 font-primary placeholder-mainBackground focus:outline-none"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
@@ -107,7 +103,7 @@ function Login() {
             <input
               type="password"
               id="password"
-              className="relative w-3/4 h-10 mx-auto mt-1 px-3 py-2  border-transparent rounded-md bg-transparent text-mainBackground placeholder-opacity-75 font-primary placeholder-mainBackground"
+              className="relative w-3/4 h-10 mx-auto mt-1 px-3 py-2  border-transparent rounded-md bg-transparent text-mainBackground placeholder-opacity-75 font-primary placeholder-mainBackground focus:outline-none"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
